@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Report Download</h1>
+    <p>Type a number (please not too big!) and click "Download" button.</p>
+</div>
+<div class="row">
+    <div class="col-sm-4">
+        <div class="form-group">
+            <label for="txt-product-count">Product count:</label>
+            <input id="txt-product-count" class="form-control form-control-sm" type="number" />
+        </div>
+        <div class="btn-group">
+            <button id="btn-product-download" class="btn btn-primary btn-sm">Download Report</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btn-product-download').click(function () {
+                $.ajax({
+                    url: '/api/products/export/' + $('#txt-product-count').val(),
+                    xhrFields: {
+                        responseType: 'arraybuffer'
+                    },
+                    success: function (data) {
+                        var blob = new Blob([data], { type: "application/octet-stream" });
+                        var link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = "report.xlsx";
+                        link.click();
+                    }
+                    
+                });
+            })
+        })
+    </script>
+}
